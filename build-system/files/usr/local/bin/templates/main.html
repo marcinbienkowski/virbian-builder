@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <title>Dodawanie komunikatów</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+    <h1>Dodaj jakiś komunikat:</h1>
+    <form action="add" method="post">
+        <textarea name="content" rows="5" cols="60"></textarea>
+        <br/>
+        <input type="submit" value="Wyślij"/>
+    </form>
+    <h1>Ostatnie 13 komunikatów:</h1>
+    <ol>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ol>
+</body>
+</html>

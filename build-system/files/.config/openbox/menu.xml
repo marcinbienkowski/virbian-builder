@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu xmlns="http://openbox.org/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://openbox.org/
+                file:///usr/share/openbox/menu.xsd">
+
+<menu id="root-menu" label="Openbox 3">
+  <item label="Terminal">
+    <action name="Execute"><execute>xfce4-terminal</execute></action>
+  </item>
+  <item label="Firefox">
+    <action name="Execute"><execute>firefox</execute></action>
+  </item>
+  <item label="Thunderbird">
+    <action name="Execute"><execute>thunderbird</execute></action>
+  </item>
+  <item label="Wireshark">
+    <action name="Execute"><execute>wireshark</execute></action>
+  </item>  
+  <separator />
+
+  <menu id="res-menu" label="Resolution">
+    <item label="1920x1080">
+      <action name="Execute"><execute>sh -c 'xrandr -s 1920x1080; hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg'</execute></action>
+    </item>
+    <item label="1650x1050">
+      <action name="Execute"><execute>sh -c 'xrandr -s 1680x1050; hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg'</execute></action>
+    </item>
+    <item label="1280x800">
+      <action name="Execute"><execute>sh -c 'xrandr -s 1280x800; hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg'</execute></action>
+    </item>
+    <item label="1024x768">
+      <action name="Execute"><execute>sh -c 'xrandr -s 1024x768; hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg'</execute></action>
+    </item>
+    <item label="800x600">
+      <action name="Execute"><execute>sh -c 'xrandr -s 800x600; hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg'</execute></action>
+    </item>
+  </menu>
+
+  <menu id="client-list-menu" /> 
+  <item label="Restart OpenBox">
+    <action name="Restart" />
+  </item>
+  <item label="Exit">
+    <action name="Exit" />
+  </item>
+</menu>
+
+</openbox_menu>

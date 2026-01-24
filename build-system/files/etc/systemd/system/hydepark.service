@@ -1,0 +1,10 @@
+[Unit]
+Description=Hydepark Service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/hydepark.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=hydepark
