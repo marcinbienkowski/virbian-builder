@@ -81,8 +81,8 @@ The commands below will overwrite `~/builds/`. Without `-force`, the build fails
 You may also adjust `memory` and `cpus` in `virbian.auto.pkrvars.hcl` for weaker build machines.
 
 The resulting VM image will be placed in `~/builds/`:
-- `virbian-x86_64-disk001.vmdk` — x86_64 architecture
-- `virbian-arm64-disk001.vmdk` — arm64 architecture (Apple Silicon)
+- `virbian-x86_64-build-disk001.vmdk` — x86_64 architecture
+- `virbian-arm64-build-disk001.vmdk` — arm64 architecture (Apple Silicon)
 
 
 ### How It Works
@@ -97,14 +97,18 @@ The resulting VM image will be placed in `~/builds/`:
 
 ## Registering in VirtualBox
 
-You can create the machine manually in the VirtualBox GUI and add `~/builds/virbian-<arch>-disk001.vmdk` as medium. Or you can use scripts in `tools/` folder for automation. 
+You can create the machine manually in the VirtualBox GUI and add `~/builds/virbian-<arch>-disk001.vmdk` as medium. Or you can use scripts in `tools/` folder for automation. Replace `<arch>` by `x86_64` by `arm64` in the instructions below.
 
 > **Warning:** The scripts in `tools/` are half-baked and should be used at your own risk. They are provided as a convenience and may not work in all environments. Read their source before running them.
+
+> **Warning:** In particular, it's not possible to create more than one machine using this script. Use cloning mechanism in VirtualBox GUI if you need this feature.
+
+
 
 Use `add-to-vb.sh` to copy the VMDK to `~/temp/` (with a timestamp) and register a new VM:
 
 ```bash
-./tools/add-to-vb.sh ~/builds/virbian-x86_64-disk001.vmdk
+./tools/add-to-vb.sh ~/builds/virbian-<arch>-build-disk001.vmdk
 ```
 
 The resulting VM is configured with:
@@ -116,7 +120,7 @@ The resulting VM is configured with:
 
 To start the VM and connect via SSH:
 ```bash
-VBoxManage startvm virbian-x86_64
+VBoxManage startvm virbian-<arch>
 ssh user@localhost -p 2222
 ```
 

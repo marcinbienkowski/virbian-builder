@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+# To avoid accidentally modifying the original source medium, the script copies the source medium
+# first to ~/temp/virbian-<timestamp>.{vdi|vdmk}.
+#
+# As it is mainly intended for testing newly created builds, it removes existing keys for localhost:2222
+# from ~/.ssh/known_hosts.
+
 setopt errexit
 
 if [[ -z $1 ]]; then
