@@ -12,4 +12,3 @@ cpus   = 4
 # Use this for weaker machines:
 # memory = 2048
 # cpus   = 1
-

@@ -19,24 +19,28 @@ sudo apt-get update
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get purge -y os-prober
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    arp-scan bind9-dnsutils bzip2 cargo debian-edu-artwork-softwaves dhcpcd ethtool firefox-esr frr g++ \
-    hsetroot iperf3 linux-headers-$(uname -r) make manpages mc netcat-traditional net-tools obconf openbox \
-    openbsd-inetd python3 python3-flask rustc telnet tcpdump thunderbird tint2 traceroute vim wireshark xinit \
-    xfce4-terminal x11-xserver-utils xserver-xorg-core xserver-xorg-input-all xz-utils
+    arp-scan bash-completion bind9-dnsutils bzip2 cargo debian-edu-artwork-softwaves dhcpcd dovecot-pop3d ethtool \
+    firefox-esr frr g++ hsetroot iperf3 linux-headers-$(uname -r) make man-db manpages mc netcat-traditional \
+    net-tools obconf openbox openbsd-inetd postfix python3 python3-flask rustc telnet tcpdump thunderbird tint2 \
+    traceroute vim wireshark xinit xfce4-terminal x11-xserver-utils xserver-xorg-core xserver-xorg-input-all xz-utils
 
 
 echo "=== Installing Virtualbox Guest Additions ==="
 
 sudo mount -o loop,ro /home/user/VBoxGuestAdditions.iso /mnt
-sudo /mnt/VBoxLinuxAdditions.run || true
+if [ $(uname -m) = "aarch64" ]; then
+    sudo /mnt/VBoxLinuxAdditions-arm64.run || true
+else
+    sudo /mnt/VBoxLinuxAdditions.run || true
+fi
 sudo umount /mnt
 rm /home/user/VBoxGuestAdditions.iso
 
 
 echo "=== System-level config ==="
 
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=1"/' /etc/default/grub
-sudo sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/' /etc/default/grub
+sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=1"/' /etc/default/grub
+sudo sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/' /etc/default/grub
 sudo update-grub
 
 sudo usermod -aG wireshark user
@@ -65,10 +69,8 @@ EOF
 
 echo "=== Final cleanup ==="
 
-sudo systemctl disable frr.service
-sudo systemctl disable ssh.service
-sudo systemctl mask dhcpcd.service
-sudo systemctl mask ifup@.service
+sudo systemctl disable dovecot.service frr.service postfix.service ssh.service
+sudo systemctl mask dhcpcd.service ifup@.service
 
 sudo apt-get purge -y linux-headers-$(uname -r)
 sudo apt-get autopurge -y

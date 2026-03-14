@@ -1,3 +1,4 @@
+xrandr -s 1280x800
 hsetroot -fill /usr/share/wallpapers/FuturePrototype/contents/images/1280x1024.svg
 exec tint2 &
 exec xfce4-terminal

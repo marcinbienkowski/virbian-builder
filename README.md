@@ -13,7 +13,7 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 - **Desktop Environment**: X.Org, Openbox and tint2
 - **Applications**: Firefox ESR, Thunderbird, Wireshark, vim, xfce4-terminal, mc
 - **Development Tools**: gcc/g++, make, cargo, rustc, python
-- **Networking Tools**: arp-scan, bind9-dnsutils, dhcpcd, ethtool, frr, netcat, tcpdump, telnet, traceroute, iperf3, net-tools
+- **Networking Tools**: arp-scan, bind9-dnsutils, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute 
 - **Network Configuration**:
   - IP forwarding enabled
   - Responds to broadcast ICMP echo requests
@@ -46,15 +46,13 @@ virbian-builder/
 - [Packer](https://www.packer.io/) (>= 1.7.0)
 - [VirtualBox](https://www.virtualbox.org/) (>= 7.2)
 
-VirtualBox 7.0 is not sufficient: it has Guest Additions that are too old for kernel 6.12 in Debian 13. We also cannot use the ISO from Debian 13 distribution, as it is too old as well, see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1104024 .
-
 
 ### Linux: Disable KVM modules
 
 On Linux, KVM modules may conflict with VirtualBox. Before building, unload them:
 
 ```bash
-sudo modprobe -r kvm_intel kvm
+sudo modprobe -r kvm_intel kvm_amd kvm
 ```
 
 
