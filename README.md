@@ -13,7 +13,7 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 - **Desktop Environment**: X.Org, Openbox and tint2
 - **Applications**: Firefox ESR, Thunderbird, Wireshark, vim, xfce4-terminal, mc
 - **Development Tools**: gcc/g++, make, cargo, rustc, python
-- **Networking Tools**: arp-scan, bind9-dnsutils, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute 
+- **Networking Tools**: arp-scan, bind9-dnsutils, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute
 - **Network Configuration**:
   - IP forwarding enabled
   - Responds to broadcast ICMP echo requests
@@ -112,10 +112,10 @@ Use `add-to-vb.sh` to copy the VMDK to `~/temp/` (with a timestamp) and register
 ```
 
 The resulting VM is configured with:
-- 4 CPUs, 8 GB RAM
+- 1 CPUs, 2 GB RAM
 - EFI firmware, VMSVGA graphics
 - NAT networking with SSH forwarded to host port `2222` of local machine
-- Shared folder: `~/Downloads` on the host, mounted as `Downloads`
+- Shared folder: `~/Downloads` on the host, mountable as `Downloads` in guest
 - Bidirectional clipboard
 
 To start the VM and connect via SSH:
@@ -124,7 +124,14 @@ VBoxManage startvm virbian-<arch>
 ssh user@localhost -p 2222
 ```
 
+To mount the `Downloads` folder in the virtual machine:
+```bash
+mkdir ~/Downloads
+sudo mount -t vboxsf -o uid=1000,gid=1000 Downloads ~/Downloads
+```
+
 To unregister and delete the VM:
 ```bash
 ./tools/remove-from-vb.sh
 ```
+

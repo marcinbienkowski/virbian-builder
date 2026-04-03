@@ -1,10 +1,24 @@
 #!/bin/zsh
 
-# To avoid accidentally modifying the original source medium, the script copies the source medium
-# first to ~/temp/virbian-<timestamp>.{vdi|vdmk}.
+# Script for adding the built machine to VirtualBox.
+# It runs on 
+# - Linux on x86_64 architecture or 
+# - MacOS on arm64 architecture.
 #
-# As it is mainly intended for testing newly created builds, it removes existing keys for localhost:2222
+# To avoid accidentally modifying the original source medium, the script copies the source medium
+# first to ~/temp/virbian-<timestamp>.{vdi|vmdk}.
+#
+# This script tries to mimic the setup that would be obtained by GUI creator in VirtualBox 7.2,
+# for "Debian ARM 64-bit" / "Debian 64-bit" machines with EFI enabled.
+#
+# It ignores, however, the setting for audio and does not add controller for CD/DVD. 
+# Additionally it:
+# - enables bidirectional clipboard
+# - enables NAT port forwarding for SSH
+#
+# As it is mainly intended for testing newly created builds, it removes existing keys for [127.0.0.1]:2222
 # from ~/.ssh/known_hosts.
+
 
 setopt errexit
 
@@ -20,37 +34,45 @@ local arch=$(uname -m)
 local vm_name=virbian-$arch
 local vm_folder=~/.config/VirtualBox\ VMs
 
-VBoxManage createvm --name $vm_name --basefolder $vm_folder --register
-
-VBoxManage modifyvm $vm_name \
-    --ostype Debian_64 \
-    --firmware efi \
-    --cpus 4 \
-    --memory 8192 \
-    --vram 16 \
-    --graphicscontroller vmsvga \
-    --boot1 disk --boot2 none --boot3 none --boot4 none \
-    --rtcuseutc on \
-    --mouse usbtablet \
-    --clipboard bidirectional \
-    --audio-controller ac97 \
-    --audio-out on \
-    --usb-ehci on \
-    --nic1 nat \
-    --natpf1 "ssh,tcp,,2222,,22"
-
-if [[ $arch == "arm64" ]]; then
-    VBoxManage setextradata $vm_name GUI/ScaleFactor 2
+if [[ $arch == "x86_64" ]]; then
+    local ostype="Debian_64"
+    local vram_size=16
+elif [[ $arch == "arm64" ]]; then
+    local ostype="Debian_arm64"
+    local vram_size=128
 else
-    VBoxManage modifyvm $vm_name \
-        --pae off \
-        --spec-ctrl on
+    print "This script can run only on x86_64 or arm64" >&2
+    exit 1
 fi
 
-cp $source_medium $destination_medium
-VBoxManage storagectl $vm_name --name SATA --add sata --controller IntelAhci --portcount 1
-VBoxManage storageattach $vm_name --storagectl SATA --port 0 --device 0 --type hdd --medium $destination_medium
 
+VBoxManage createvm --name $vm_name --ostype $ostype --basefolder $vm_folder --register
+
+VBoxManage modifyvm $vm_name \
+    --firmware efi \
+    --memory 2048 \
+    --graphicscontroller vmsvga \
+    --vram $vram_size \
+    --mouse usbtablet \
+    --clipboard bidirectional \
+    --natpf1 "ssh,tcp,,2222,,22"
+
+if [[ $arch == "x86_64" ]]; then
+    VBoxManage modifyvm $vm_name \
+        --usb-ehci on
+    VBoxManage storagectl $vm_name --name StorageController --add sata --controller IntelAhci --portcount 1
+else
+    VBoxManage modifyvm $vm_name \
+        --usb-ohci off \
+        --usb-xhci on \
+        --keyboard usb
+    VBoxManage storagectl $vm_name --name StorageController --add virtio-scsi --portcount 1
+    VBoxManage setextradata $vm_name GUI/ScaleFactor 2
+fi
+
+mkdir -p ~/temp
+cp $source_medium $destination_medium
+VBoxManage storageattach $vm_name --storagectl StorageController --port 0 --device 0 --type hdd --medium $destination_medium
 VBoxManage sharedfolder add $vm_name --name Downloads --hostpath ~/Downloads
 
 ssh-keygen -f ~/.ssh/known_hosts -R '[127.0.0.1]:2222'
