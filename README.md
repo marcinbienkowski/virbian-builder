@@ -10,17 +10,16 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 - **Base**: Debian 13 (Trixie) netinst
 - **Disk**: 8 GB
 - **User**: `user` / `user` (with passwordless sudo, auto-login on tty1)
-- **Desktop Environment**: X.Org, Openbox and tint2
-- **Applications**: Firefox ESR, Thunderbird, Wireshark, vim, xfce4-terminal, mc
-- **Development Tools**: gcc/g++, make, cargo, rustc, python
-- **Networking Tools**: arp-scan, bind9-dnsutils, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute
+- **Desktop Environment**: openbox, tint2, x.org
+- **Applications**: htop, firefox, mc, thunderbird, vim, wireshark, xfce4-terminal
+- **Development Tools**: gcc/g++, make, cargo, rustc, python, cmake
+- **Networking Tools**: arp-scan, bind9-dnsutils, curl, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute
 - **Network Configuration**:
   - IP forwarding enabled
   - Responds to broadcast ICMP echo requests
   - inetd echo and daytime services enabled
 - **SSH**: Disabled by default (enable manually with `sudo systemctl start ssh`)
 - **VirtualBox Guest Additions**
-- **Locales**: en_US.UTF-8, en_GB.UTF-8, pl_PL.UTF-8
 
 
 ## Project Structure
@@ -103,8 +102,6 @@ You can create the machine manually in the VirtualBox GUI and add `~/builds/virb
 
 > **Warning:** In particular, it's not possible to create more than one machine using this script. Use cloning mechanism in VirtualBox GUI if you need this feature.
 
-
-
 Use `add-to-vb.sh` to copy the VMDK to `~/temp/` (with a timestamp) and register a new VM:
 
 ```bash
@@ -117,6 +114,7 @@ The resulting VM is configured with:
 - NAT networking with SSH forwarded to host port `2222` of local machine
 - Shared folder: `~/Downloads` on the host, mountable as `Downloads` in guest
 - Bidirectional clipboard
+- Immutable disk (changes are discarded on VM shutdown)
 
 To start the VM and connect via SSH:
 ```bash

@@ -1,8 +1,8 @@
 #!/bin/zsh
 
 # Script for adding the built machine to VirtualBox.
-# It runs on 
-# - Linux on x86_64 architecture or 
+# It runs on
+# - Linux on x86_64 architecture or
 # - MacOS on arm64 architecture.
 #
 # To avoid accidentally modifying the original source medium, the script copies the source medium
@@ -73,6 +73,7 @@ fi
 mkdir -p ~/temp
 cp $source_medium $destination_medium
 VBoxManage storageattach $vm_name --storagectl StorageController --port 0 --device 0 --type hdd --medium $destination_medium
+VBoxManage modifymedium disk $destination_medium --type immutable
 VBoxManage sharedfolder add $vm_name --name Downloads --hostpath ~/Downloads
 
 ssh-keygen -f ~/.ssh/known_hosts -R '[127.0.0.1]:2222'
