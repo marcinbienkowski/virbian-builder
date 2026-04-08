@@ -9,20 +9,16 @@ echo 'APT::Install-Recommends "false";' | sudo tee /etc/apt/apt.conf.d/99no-reco
 
 echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
 
-sudo tee /etc/dpkg/dpkg.cfg.d/no-locales << 'EOF'
-path-exclude=/usr/share/locale/*
-path-include=/usr/share/locale/en*
-path-include=/usr/share/locale/pl*
-EOF
 
 sudo apt-get update
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get purge -y os-prober
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    arp-scan bash-completion bind9-dnsutils bzip2 cargo debian-edu-artwork-softwaves dhcpcd dovecot-pop3d ethtool \
-    firefox-esr frr g++ hsetroot iperf3 linux-headers-$(uname -r) make man-db manpages mc netcat-traditional \
-    net-tools obconf openbox openbsd-inetd postfix python3 python3-flask rustc telnet tcpdump thunderbird tint2 \
-    traceroute vim wireshark xinit xfce4-terminal x11-xserver-utils xserver-xorg-core xserver-xorg-input-all xz-utils
+    arp-scan bash-completion bind9-dnsutils bzip2 cargo cmake curl debian-edu-artwork-softwaves dhcpcd dovecot-pop3d \
+    ethtool firefox-esr frr g++ hsetroot htop iperf3 linux-headers-$(uname -r) make man-db manpages mc \
+    netcat-traditional net-tools obconf openbox openbsd-inetd postfix python3 python3-flask rustc telnet tcpdump \
+    thunderbird time tint2 traceroute vim wireshark xinit xfce4-terminal x11-xserver-utils xserver-xorg-core \
+    xserver-xorg-input-all xz-utils
 
 
 echo "=== Installing Virtualbox Guest Additions ==="
@@ -43,6 +39,8 @@ sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="lo
 sudo sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/' /etc/default/grub
 sudo update-grub
 
+sudo sed -i 's/^AcceptEnv.*/#&/' /etc/ssh/sshd_config
+
 sudo usermod -aG wireshark user
 
 sudo sed -i '/^#echo/s/^#//' /etc/inetd.conf
@@ -58,12 +56,14 @@ for i in etc usr; do
 done
 
 
-echo "=== User config ==="
+echo "=== Color prompts ==="
 
 tee -a /home/user/.bashrc << 'EOF'
-if [ -n "$SSH_CONNECTION" ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\][REMOTE] \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-fi
+source /usr/local/bin/set_color_prompt.sh
+EOF
+
+sudo tee -a /root/.bashrc << 'EOF'
+source /usr/local/bin/set_color_prompt.sh
 EOF
 
 
@@ -75,7 +75,7 @@ sudo systemctl mask dhcpcd.service ifup@.service
 sudo apt-get purge -y linux-headers-$(uname -r)
 sudo apt-get autopurge -y
 sudo apt-get clean
-sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+sudo rm -rf /tmp/* /var/lib/apt/lists/* /var/log/* /var/tmp/*
+sudo ln -s /usr/share/doc/systemd/README.logs /var/log/README
 
 echo "=== Setup complete ==="
