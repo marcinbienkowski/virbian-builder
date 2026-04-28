@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-    <title>Dodawanie komunikatów</title>
+    <title>Messages</title>
     <meta charset="utf-8"/>
 </head>
 <body>
-    <h1>Dodaj jakiś komunikat:</h1>
+    <h1>Add a message:</h1>
     <form action="add" method="post">
         <textarea name="content" rows="5" cols="60"></textarea>
         <br/>
-        <input type="submit" value="Wyślij"/>
+        <input type="submit" value="Submit"/>
     </form>
-    <h1>Ostatnie 13 komunikatów:</h1>
+    <h1>Last 13 messages:</h1>
     <ol>
         {% for message in messages %}
             <li>{{ message }}</li>
