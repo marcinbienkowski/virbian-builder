@@ -30,8 +30,10 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 virbian-builder/
 ├── README.md
 ├── tools/
-│   ├── add-to-vb.sh                   # Creates and registers a VM in VirtualBox
-│   └── remove-from-vb.sh              # Unregisters and deletes the VM
+│   ├── virbian-config.sh              # Shared config (VM name, clone prefix, folder)
+│   ├── add-virbian-to-vb.sh           # Creates and registers a VM in VirtualBox
+│   ├── create-virbian-clone.sh        # Creates a linked clone of the VM and sets its interfaces
+│   └── remove-virbian-from-vb.sh      # Unregisters and deletes the VM and all its clones
 └── build-system/
     ├── virbian.pkr.hcl                # Packer configuration
     ├── virbian.auto.pkrvars.hcl       # Build settings (architecture, memory, cpus)
@@ -100,14 +102,12 @@ The resulting VM image will be placed in `~/builds/`:
 
 You can create the machine manually in the VirtualBox GUI and add `~/builds/virbian-<arch>-disk001.vmdk` as medium. Or you can use scripts in `tools/` folder for automation. Replace `<arch>` by `x86_64` by `arm64` in the instructions below.
 
-> **Warning:** The scripts in `tools/` are half-baked and should be used at your own risk. They are provided as a convenience and may not work in all environments. Read their source before running them.
+> **Warning:** The scripts in `tools/` are provided as a convenience and may not work in all environments. Read their source before running them.
 
-> **Warning:** In particular, it's not possible to create more than one machine using this script. Use cloning mechanism in VirtualBox GUI if you need this feature.
-
-Use `add-to-vb.sh` to copy the VMDK to `~/temp/` (with a timestamp) and register a new VM:
+Use `add-virbian-to-vb.sh` to copy the VMDK to `~/temp/` (with a timestamp) and register a new VM:
 
 ```bash
-./tools/add-to-vb.sh ~/builds/virbian-<arch>-build-disk001.vmdk
+./tools/add-virbian-to-vb.sh ~/builds/virbian-<arch>-build-disk001.vmdk
 ```
 
 The resulting VM is configured with:
@@ -130,8 +130,13 @@ mkdir ~/Downloads
 sudo mount -t vboxsf -o uid=1000,gid=1000 Downloads ~/Downloads
 ```
 
-To unregister and delete the VM:
+To create a linked clone with specific network interfaces (use `NAT` or an internal network name for each NIC):
 ```bash
-./tools/remove-from-vb.sh
+./tools/create-virbian-clone.sh NAT local0 local2
+```
+
+To unregister and delete the VM and all its clones:
+```bash
+./tools/remove-virbian-from-vb.sh
 ```
 

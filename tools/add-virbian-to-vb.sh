@@ -11,13 +11,10 @@
 # This script tries to mimic the setup that would be obtained by GUI creator in VirtualBox 7.2,
 # for "Debian ARM 64-bit" / "Debian 64-bit" machines with EFI enabled.
 #
-# It ignores, however, the setting for audio and does not add controller for CD/DVD. 
+# It ignores, however, the setting for audio and does not add controller for CD/DVD.
 # Additionally it:
-# - enables bidirectional clipboard
-# - enables NAT port forwarding for SSH
-#
-# As it is mainly intended for testing newly created builds, it removes existing keys for [127.0.0.1]:2222
-# from ~/.ssh/known_hosts.
+# - enables bidirectional clipboard,
+# - enables NAT port forwarding for SSH.
 
 
 setopt errexit
@@ -30,9 +27,7 @@ fi
 local source_medium=$1
 local destination_medium=~/temp/virbian-$(date +%Y-%m-%d-%H-%M-%S).${source_medium:e}
 
-local arch=$(uname -m)
-local vm_name=virbian-$arch
-local vm_folder=~/.config/VirtualBox\ VMs
+source ${0:A:h}/virbian-config.sh
 
 if [[ $arch == "x86_64" ]]; then
     local ostype="Debian_64"
@@ -76,8 +71,8 @@ VBoxManage storageattach $vm_name --storagectl StorageController --port 0 --devi
 VBoxManage modifymedium disk $destination_medium --type immutable
 VBoxManage sharedfolder add $vm_name --name Downloads --hostpath ~/Downloads
 
-ssh-keygen -f ~/.ssh/known_hosts -R '[127.0.0.1]:2222'
 
 print "VM '$vm_name' created."
 print "Start VM:  VBoxManage startvm $vm_name"
-print "SSH:       ssh user@localhost -p 2222"
+print "SSH: ssh user@localhost -p 2222"
+print "Remove SSH fingerprints: ssh-keygen -f ~/.ssh/known_hosts -R 'localhost:2222'"
