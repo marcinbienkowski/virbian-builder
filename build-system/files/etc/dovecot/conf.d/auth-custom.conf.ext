@@ -1,0 +1,17 @@
+first_valid_uid = 8
+
+auth_allow_cleartext = yes
+
+passdb passwd-file {
+  default_password_scheme = plain
+  auth_username_format = %{user}
+  passwd_file_path = /etc/dovecot/users
+}
+
+userdb static {
+  fields {
+    uid=8
+    gid=8
+  }
+}
+

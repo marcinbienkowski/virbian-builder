@@ -12,12 +12,14 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 - **User**: `user` / `user` (with passwordless sudo, auto-login on tty1)
 - **Desktop Environment**: openbox, tint2, x.org
 - **Applications**: htop, firefox, mc, thunderbird, vim, wireshark, xfce4-terminal
-- **Development Tools**: gcc/g++, make, cargo, rustc, python, cmake
-- **Networking Tools**: arp-scan, bind9-dnsutils, curl, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, tcpdump, telnet, traceroute
+- **Development Tools**: gcc/g++, make, cargo, rustc, python, cmake, gnupg
+- **Networking Tools**: arp-scan, bind9-dnsutils, curl, dhcpcd, ethtool, frr, iperf3, netcat, net-tools, nmap, tcpdump, telnet, traceroute, trickle
 - **Network Configuration**:
   - IP forwarding enabled
   - Responds to broadcast ICMP echo requests
   - inetd echo and daytime services enabled
+  - DNS search domain: `local`
+- **Mail**: Postfix with virtual mailboxes for `mail.example.com` (users: `user0`, `user1`, `user2`), TLS enabled; Thunderbird pre-configured with SSL certificate exception
 - **SSH**: Disabled by default (enable manually with `sudo systemctl start ssh`)
 - **VirtualBox Guest Additions**
 
