@@ -7,7 +7,7 @@ The project can build the appropriate image for both x86_64 and arm64 platforms 
 
 ## Resulting VM Specification
 
-- **Base**: Debian 13 (Trixie) netinst
+- **Base**: Debian 13.4 (Trixie) netinst
 - **Disk**: 8 GB
 - **User**: `user` / `user` (with passwordless sudo, auto-login on tty1)
 - **Desktop Environment**: openbox, tint2, x.org

@@ -15,12 +15,12 @@ variable "arch" {}
 
 locals {
     iso_urls = {
-        x86_64 = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.3.0-amd64-netinst.iso"
-        arm64  = "https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/debian-13.3.0-arm64-netinst.iso"
+        x86_64 = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.4.0-amd64-netinst.iso"
+        arm64  = "https://cdimage.debian.org/debian-cd/current/arm64/iso-cd/debian-13.4.0-arm64-netinst.iso"
     }
     iso_checksums = {
-        x86_64 = "sha256:c9f09d24b7e834e6834f2ffa565b33d6f1f540d04bd25c79ad9953bc79a8ac02"
-        arm64  = "sha256:10aa125ac1a74de9366ba624e71fb892fbc2e7863be85e966973f43d018698a6"
+        x86_64 = "sha256:0b813535dd76f2ea96eff908c65e8521512c92a0631fd41c95756ffd7d4896dc"
+        arm64  = "sha256:c31f8534597df52bd310f716d271bda30a1f58e6ff8fd9e8254eba66776c42d9"
     }
     guest_os_types = {
         x86_64 = "Debian_64"
