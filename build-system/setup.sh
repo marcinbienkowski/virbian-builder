@@ -17,8 +17,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     arp-scan bash-completion bind9-dnsutils bzip2 cargo cmake curl debian-edu-artwork-softwaves dhcpcd dovecot-pop3d \
     ethtool firefox-esr frr g++ gnupg hsetroot htop iperf3 linux-headers-$(uname -r) make man-db manpages mc \
     netcat-openbsd net-tools nmap obconf openbox openbsd-inetd postfix python3 python3-flask rustc telnet tcpdump \
-    thunderbird time tint2 traceroute trickle vim wireshark xinit xfce4-terminal x11-xserver-utils xserver-xorg-core \
-    xserver-xorg-input-all xz-utils
+    thunderbird time tint2 traceroute trickle vim wireguard wireshark xinit xfce4-terminal x11-xserver-utils \
+    xserver-xorg-core xserver-xorg-input-all xz-utils
 
 
 echo "=== Installing Virtualbox Guest Additions ==="
@@ -71,7 +71,7 @@ test $(id -u mail) -eq 8
 sudo mkdir -p /var/mail/vhosts/mail.example.com
 sudo chown -R mail:mail /var/mail/vhosts
 
-sudo postconf -e "mydestination=virbian.local, localhost.local, localhost"
+sudo postconf -e "mydestination = virbian.localdomain, localhost.localdomain, localhost"
 sudo postconf -e "virtual_mailbox_domains = mail.example.com"
 sudo postconf -e "virtual_mailbox_base = /var/mail/vhosts"
 sudo postconf -e "virtual_mailbox_maps = texthash:/etc/postfix/vmailbox"
@@ -95,8 +95,7 @@ echo 'source /usr/local/bin/set_color_prompt.sh' | sudo tee -a /root/.bashrc
 echo 'source /usr/local/bin/set_color_prompt.sh' >> /home/user/.bashrc
 
 mkdir -p /home/user/.thunderbird/default
-echo "mail.example.com:25: OID.2.16.840.1.101.3.4.2.1 ${SSL_FINGERPRINT}" > /home/user/.thunderbird/default/cert_override.txt
-
+echo -e "mail.example.com:25:\tOID.2.16.840.1.101.3.4.2.1\t${SSL_FINGERPRINT}\t" > /home/user/.thunderbird/default/cert_override.txt
 
 echo "=== Final cleanup ==="
 
@@ -109,7 +108,5 @@ sudo apt-get clean
 sudo rm -rf /tmp/* /var/lib/apt/lists/* /var/log/* /var/tmp/*
 sudo ln -s /usr/share/doc/systemd/README.logs /var/log/README
 
-echo 'domain local' | sudo tee /etc/resolv.conf
-echo 'domain local' | sudo tee /etc/resolv.conf.tail
 
 echo "=== Setup complete ==="
